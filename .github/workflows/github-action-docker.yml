@@ -1,3 +1,4 @@
+name: GitHub Actions Docker
 on: [push]
 
 jobs:
@@ -7,7 +8,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: actions/simple-github-action@v2
+        uses: actions/hello-world-docker-action@v2
         with:
           who-to-greet: 'Aas :D'
       # Use the output from the `hello` step
