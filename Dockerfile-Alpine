@@ -1,0 +1,26 @@
+FROM alpine:3.18.2
+
+USER root
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+RUN apk upgrade && apk update && apk add libssl1.1 libcrypto1.1 
+
+
+# Custom configuration for Alpine Linux
+RUN set -ex; \
+    apk add --no-cache tzdata; \
+    cd /usr/src/app; \
+    rm -rf \
+        /var/cache/apk/* \
+        /tmp/* \
+        ./*; \
+    adduser -S -u 1000 -G root user; \
+    chmod -R 755 /usr/src/app; \
+    chown -R user:root /usr/src/app
+
+USER user
+
