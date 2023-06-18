@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - "main"
+    tags:
+      - "v*"
+
+env:
+  IMAGE_NAME: aassuhendar/alpine-based
 
 jobs:
   Build-Image:
@@ -21,10 +26,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       
+      - id: docker_meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.IMAGE_NAME}}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile-Alpine
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/alpine-based:3.18.2
+          # tags: ${{ secrets.DOCKERHUB_USERNAME }}/alpine-based:3.18.2
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
